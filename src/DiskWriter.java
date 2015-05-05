@@ -45,30 +45,8 @@ class DiskWriter {
 		
 		raf.seek(node.i * SIZE);
 		raf.write(bytes);
-		/*
-		children = new Key[node.key.size()];
-		children = node.key.values().toArray(children);
-		for (int i = 0; i < BPTree.MAX; i++) {
-			k = children.get(i);
-			if (k != null) {
-				raf.writeInt(k.i);
-			
-				if (k.c != null) raf.writeInt(k.c.i);
-				else raf.writeChars("    "); // 4 bytes
-			}
-			else raf.writeChars("        "); // 8 bytes
-		}
-		if (node.left != null) raf.writeInt(node.left.i);
-		else raf.writeChars("    "); // 4 bytes
-		
-		if (node.parent != null) raf.writeInt(node.parent.i);
-		else raf.writeChars("    "); // 4 bytes
-		
-		if (node.right != null) raf.writeInt(node.right.i);
-		else raf.writeChars("    "); // 4 bytes
-		*/
+		raf.close();
 		
 		node.saved = true;
-		raf.close();
 	}
 }
