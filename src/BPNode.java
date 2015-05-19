@@ -1,7 +1,7 @@
 import java.util.*;
 
 class BPNode {
-	int i; // index, 4 bytes
+	private int i; // index, 4 bytes
 	private boolean saved; // SET TO FALSE WHENEVER THE NODE IS CHANGED, TRUE WHEN SAVED
 	private TreeMap<Integer, Key> children;
 	BPNode left, parent, right; // 12 bytes because I'll save their i
@@ -12,7 +12,11 @@ class BPNode {
 		this.left = this.parent = this.right = null;
 		
 		this.children = new TreeMap<Integer, Key>();
-		this.children.put(i, new Key(k, null));
+		this.children.put(this.i, new Key(k, null));
+	}
+	
+	public int index() {
+		return this.i;
 	}
 	
 	public Key getChild(int i) {
@@ -45,7 +49,7 @@ class BPNode {
 		s = "l: " + (this.left != null ? this.left.i : "nil") + "\n";
 		s += "p: " + (this.parent != null ? this.parent.i : "nil") + "\n";
 		s += "r: " + (this.right != null ? this.right.i : "nil") + "\n";
-		s += "[" + this.saved + "]: " + this.i + "\n";
+		s += "i: " + this.i + " [" + this.saved + "]\n";
 		s += this.children.toString();
 		
 		return s;
