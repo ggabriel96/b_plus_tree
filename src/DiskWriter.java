@@ -16,13 +16,13 @@ class DiskWriter {
 		ByteBuffer b = ByteBuffer.allocate(SIZE);
 		b.order(ByteOrder.LITTLE_ENDIAN);
 		
-		//b.putInt(node.i);
+		//b.putInt(node.index());
 		for (i = 0; i < BPTree.MAX; i++) {
 			k = node.getChild(i); 
 			if (k != null) {
 				b.putInt(k.i);
 				
-				if (k.c != null) b.putInt(k.c.i);
+				if (k.c != null) b.putInt(k.c.index());
 				else b.putInt(-1);
 			}
 			else {
@@ -31,13 +31,13 @@ class DiskWriter {
 			}
 		}
 		
-		if (node.left != null) b.putInt(node.left.i);
+		if (node.left != null) b.putInt(node.left.index());
 		else b.putInt(-1);
 		
-		if (node.parent != null) b.putInt(node.parent.i);
+		if (node.parent != null) b.putInt(node.parent.index());
 		else b.putInt(-1);
 		
-		if (node.right != null) b.putInt(node.right.i);
+		if (node.right != null) b.putInt(node.right.index());
 		else b.putInt(-1);
 		
 		return b.array();
@@ -47,7 +47,7 @@ class DiskWriter {
 		byte[] bytes = this.nodeToBytes(node);
 		RandomAccessFile raf = new RandomAccessFile(this.filename, "rw");		
 		
-		raf.seek(node.i * SIZE);
+		raf.seek(node.index() * SIZE);
 		raf.write(bytes);
 		raf.close();
 		
@@ -86,5 +86,9 @@ class DiskWriter {
 		node.setRight(b.getInt());
 		
 		return node;
+	}
+	
+	public long fileLength() throws IOException {
+		return new RandomAccessFile(this.filename, "rw").length();
 	}
 }
