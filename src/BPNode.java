@@ -11,8 +11,10 @@ class BPNode {
 		this.saved = false;
 		this.left = this.parent = this.right = null;
 		
+		// the index must be the smallest key among all mapped values,
+		// but the tree key must be an index as if it was an array
 		this.children = new TreeMap<Integer, Key>();
-		this.children.put(this.i, new Key(k, null));
+		this.addChild(k, new Key(k, null));
 	}
 	
 	public int index() {
@@ -24,7 +26,7 @@ class BPNode {
 	}
 	
 	public void addChild(int i, int c) {
-		this.children.put(i, new Key(c, null));
+		this.children.put(this.children.firstKey(), new Key(c, null));
 	}
 	
 	public void setLeft(int i) {
