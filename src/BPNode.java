@@ -26,6 +26,15 @@ class BPNode {
 		return this.children.get(index);
 	}
 
+	public BPNode find(int key) {
+		if (this.get(key) == null) {
+			return this;
+		}
+		else {
+			return this.get(key).find(key);
+		}
+	}
+
 	public void addChild(int key, BPNode child) {
 		if (this.children == null) {
 			this.children = new TreeMap<Integer, BPNode>();
@@ -36,22 +45,47 @@ class BPNode {
 
 	public void addFix() {
 		if (this.children.size() >= BPNode.MAX) {
-			BPNode newNode = this;
+			Integer half = this.children.firstKey() + ((this.children.lastKey() - this.children.firstKey()) / 2);
+			TreeMap<Integer, BPNode> newChildren = new TreeMap<Integer, BPNode>();
 			BPNode left = new BPNode(), right = new BPNode();
 
 			left.children = new TreeMap<Integer, BPNode>();
-			left.children.putAll(this.children.headMap(this.children.lastKey() + ((this.children.firstKey() - this.children.lastKey()) / 2), false));
+			left.children.putAll(this.children.headMap(half, true));
 
 			right.children = new TreeMap<Integer, BPNode>();
-			right.children.putAll(this.children.tailMap(this.children.lastKey() + ((this.children.firstKey() - this.children.lastKey()) / 2), true));
+			right.children.putAll(this.children.tailMap(half, false));
 
-			System.out.println("Left: " + left);
-			System.out.println("Right: " + right);
+			newChildren.put(left.children.firstKey(), left);
+			newChildren.put(right.children.firstKey(), right);
+
+			this.children = new TreeMap<Integer, BPNode>(newChildren);
+
+			// System.out.println("this.children:");
+			// for (Map.Entry<Integer, BPNode> entry: this.children.entrySet()) {
+			// 	System.out.println(entry);
+			// } System.out.println();
+			//
+			// System.out.println("this.children[0]:");
+			// for (Map.Entry<Integer, BPNode> entry: this.children.get(left.children.firstKey()).children.entrySet()) {
+			// 	System.out.println(entry);
+			// } System.out.println();
+			//
+			// System.out.println("this.children[1]:");
+			// for (Map.Entry<Integer, BPNode> entry: this.children.get(right.children.firstKey()).children.entrySet()) {
+			// 	System.out.println(entry);
+			// }
+			// System.out.println("-----------------------");
 		}
 	}
 
 	public void delChild(int key) {
 		this.children.remove(key);
+	}
+
+	public void print() {
+		for (Map.Entry<Integer, BPNode> entry: this.children.entrySet()) {
+			System.out.println(entry);
+		}
 	}
 
 	public String toString() {
