@@ -17,8 +17,10 @@ class BPTree {
 			this.root = new BPNode(key);
 		}
 		else {
-			this.root.addChild(key);
+			this.root.addChild(key, null);
 		}
+
+		this.root.addFix();
 	}
 
 	public void del(int key) {
