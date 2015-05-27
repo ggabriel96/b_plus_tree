@@ -11,11 +11,11 @@ class Main {
 		bpt.add(5);
 		bpt.add(6);
 		bpt.add(7);
-		
 		System.out.println(bpt.root);
-		
-		for (KeyNode kn: bpt.root.childrenArr()) {
-			//System.out.println(kn);
-		}
+
+		bpt.del(1);
+		bpt.del(4);
+		bpt.del(6);
+		System.out.println(bpt.root);
 	}
 }

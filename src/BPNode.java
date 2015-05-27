@@ -3,44 +3,34 @@ import java.util.*;
 class BPNode {
 	public int count;
 	public static final int MAX = 340;
-	public TreeMap<Integer, KeyNode> children;
+	public TreeMap<Integer, BPNode> children;
 	public BPNode left, parent, right;
-	
+
 	public BPNode(int key) {
 		this.count = 0;
 		this.left = this.parent = this.right = null;
-		
-		this.children = new TreeMap<Integer, KeyNode>();
+
+		this.children = new TreeMap<Integer, BPNode>();
 		this.addChild(key);
 	}
-	
-	public KeyNode get(int index) {
+
+	public BPNode get(int index) {
 		return this.children.get(index);
 	}
-	
+
 	public void addChild(int key) {
-		this.children.put(this.count, new KeyNode(key, null));
+		this.children.put(key, null);
 		this.count++;
+		// if (this.count > BPNode.MAX) {
+		// }
 	}
 
-	public KeyNode[] childrenArr() {
-		KeyNode[] nodes = new KeyNode[children.size()];
-		return this.children.values().toArray(nodes);
+	public void delChild(int key) {
+		this.children.remove(key);
 	}
-	
+
 	public String toString() {
-		String s = "{";
-		KeyNode[] nodes = this.childrenArr();
-		
-		for (int i = 0; i < nodes.length; i++) {
-			s += nodes[i].toString();
-			
-			if (i + 1 < nodes.length) s += ", ";
-		}
-		
-		s += "}";
-		
-		return s;
+		return this.children.keySet().toString();
 	}
-	
+
 }
