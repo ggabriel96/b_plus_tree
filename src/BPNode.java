@@ -3,7 +3,7 @@ import java.util.*;
 class BPNode {
 	public int count;
 	// public static final int MAX = 340;
-	public static final int MAX = 4;
+	public static final int MAX = 8;
 	public TreeMap<Integer, BPNode> children;
 	public BPNode left, parent, right;
 
@@ -82,14 +82,22 @@ class BPNode {
 		this.children.remove(key);
 	}
 
-	public void print() {
+	public void graph() {
 		for (Map.Entry<Integer, BPNode> entry: this.children.entrySet()) {
-			System.out.println(entry);
+			if (entry.getValue() != null) {
+				System.out.println("\t\"" + this.children.keySet().toString() +
+									"\" -> \"" + entry.getValue().toString() +
+									"\" [label = \"" + entry.getKey() + "\"];");
+
+				entry.getValue().graph();
+			}
+			else {
+				System.out.println("\t\"" + this.children.keySet().toString() + "\" -> \"null\" [label = \"" + entry.getKey() + "\"];");
+			}
 		}
 	}
 
 	public String toString() {
 		return this.children.keySet().toString();
 	}
-
 }

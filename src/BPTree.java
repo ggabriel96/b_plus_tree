@@ -32,4 +32,10 @@ class BPTree {
 			this.root.delChild(key);
 		}
 	}
+
+	public void graph() {
+        System.out.println("digraph BPTree {");
+        this.root.graph();
+        System.out.println("}");
+    }
 }
