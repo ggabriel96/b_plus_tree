@@ -3,7 +3,7 @@ import java.util.*;
 class BPNode {
 	public int count;
 	// public static final int MAX = 340;
-	public static final int MAX = 8;
+	public static final int MAX = 4;
 	public TreeMap<Integer, BPNode> children;
 	public BPNode left, parent, right;
 
@@ -27,11 +27,11 @@ class BPNode {
 	}
 
 	public BPNode find(int key) {
-		if (this.get(key) == null) {
+		if (this.children.floorEntry(key).getValue() == null) {
 			return this;
 		}
 		else {
-			return this.get(key).find(key);
+			return this.children.floorEntry(key).getValue().find(key);
 		}
 	}
 
