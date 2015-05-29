@@ -21,6 +21,10 @@ class BPNode {
 		this.children = new TreeMap<Integer, BPNode>();
 		this.addChild(key, null);
 	}
+	
+	public int size() {
+		return this.children.size();
+	}
 
 	public BPNode get(int index) {
 		return this.children.get(index);

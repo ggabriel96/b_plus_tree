@@ -28,7 +28,7 @@ class BPTree {
 	}
 
 	public void addFix(BPNode node) {
-		if (node.children.size() >= BPNode.MAX) {
+		if (node.size() >= BPNode.MAX) {
 			Integer half = node.children.firstKey() + ((node.children.lastKey() - node.children.firstKey()) / 2);
 			TreeMap<Integer, BPNode> newChildren = new TreeMap<Integer, BPNode>();
 			BPNode left = new BPNode(), right = new BPNode();
@@ -38,11 +38,24 @@ class BPTree {
 
 			right.children = new TreeMap<Integer, BPNode>();
 			right.children.putAll(node.children.tailMap(half, false));
+			
+			left.parent = node;
+			right.parent = node;
+			
+			if (node.parent == null) {
+				newChildren.put(left.children.firstKey(), left);
+				newChildren.put(right.children.firstKey(), right);
 
-			newChildren.put(left.children.firstKey(), left);
-			newChildren.put(right.children.firstKey(), right);
-
-			node.children = new TreeMap<Integer, BPNode>(newChildren);
+				node.children = new TreeMap<Integer, BPNode>(newChildren);
+				this.root = node;
+			}
+			else {
+				node.parent.delChild(node.children.firstKey());
+				node.parent.addChild(left.children.firstKey(), left);
+				node.parent.addChild(right.children.firstKey(), right);
+				
+				this.addFix(node.parent);
+			}
 
 			// System.out.println("node.children:");
 			// for (Map.Entry<Integer, BPNode> entry: node.children.entrySet()) {
