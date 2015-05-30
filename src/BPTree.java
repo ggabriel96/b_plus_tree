@@ -29,49 +29,43 @@ class BPTree {
 
 	public void addFix(BPNode node) {
 		if (node.size() >= BPNode.MAX) {
-			Integer half = node.children.firstKey() + ((node.children.lastKey() - node.children.firstKey()) / 2);
+			int i, firstBackup = node.firstKey();
+			Map.Entry<Integer, BPNode> first, last;
 			TreeMap<Integer, BPNode> newChildren = new TreeMap<Integer, BPNode>();
 			BPNode left = new BPNode(), right = new BPNode();
 
 			left.children = new TreeMap<Integer, BPNode>();
-			left.children.putAll(node.children.headMap(half, true));
-
 			right.children = new TreeMap<Integer, BPNode>();
-			right.children.putAll(node.children.tailMap(half, false));
-			
+			for (i = 0; i < BPNode.MAX / 2; i++) {
+				first = node.firstEntry();
+				left.addChild(first.getKey(), first.getValue());
+				node.delChild(first.getKey());
+
+				last = node.lastEntry();
+				right.addChild(last.getKey(), last.getValue());
+				node.delChild(last.getKey());
+			}
 			left.parent = node;
 			right.parent = node;
-			
+
+			System.out.println("left: " + left);
+			System.out.println("right: " + right);
+
 			if (node.parent == null) {
-				newChildren.put(left.children.firstKey(), left);
-				newChildren.put(right.children.firstKey(), right);
+				newChildren.put(left.firstKey(), left);
+				newChildren.put(right.firstKey(), right);
 
 				node.children = new TreeMap<Integer, BPNode>(newChildren);
 				this.root = node;
+				node.parent = null;
 			}
 			else {
-				node.parent.delChild(node.children.firstKey());
-				node.parent.addChild(left.children.firstKey(), left);
-				node.parent.addChild(right.children.firstKey(), right);
-				
+				node.parent.delChild(firstBackup);
+				node.parent.addChild(left.firstKey(), left);
+				node.parent.addChild(right.firstKey(), right);
+
 				this.addFix(node.parent);
 			}
-
-			// System.out.println("node.children:");
-			// for (Map.Entry<Integer, BPNode> entry: node.children.entrySet()) {
-			// 	System.out.println(entry);
-			// } System.out.println();
-			//
-			// System.out.println("node.children[0]:");
-			// for (Map.Entry<Integer, BPNode> entry: node.children.get(left.children.firstKey()).children.entrySet()) {
-			// 	System.out.println(entry);
-			// } System.out.println();
-			//
-			// System.out.println("node.children[1]:");
-			// for (Map.Entry<Integer, BPNode> entry: node.children.get(right.children.firstKey()).children.entrySet()) {
-			// 	System.out.println(entry);
-			// }
-			// System.out.println("-----------------------");
 		}
 	}
 

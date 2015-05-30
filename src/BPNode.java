@@ -21,7 +21,7 @@ class BPNode {
 		this.children = new TreeMap<Integer, BPNode>();
 		this.addChild(key, null);
 	}
-	
+
 	public int size() {
 		return this.children.size();
 	}
@@ -31,12 +31,28 @@ class BPNode {
 	}
 
 	public BPNode find(int key) {
-		if (this.children.floorEntry(key).getValue() == null) {
+		if (this.children.floorEntry(key) == null || this.children.floorEntry(key).getValue() == null) {
 			return this;
 		}
 		else {
 			return this.children.floorEntry(key).getValue().find(key);
 		}
+	}
+
+	public Map.Entry<Integer, BPNode> firstEntry() {
+		return (Map.Entry<Integer, BPNode>)this.children.firstEntry();
+	}
+
+	public Map.Entry<Integer, BPNode> lastEntry() {
+		return (Map.Entry<Integer, BPNode>)this.children.lastEntry();
+	}
+
+	public Integer firstKey() {
+		return this.children.firstKey();
+	}
+
+	public Integer lastKey() {
+		return this.children.lastKey();
 	}
 
 	public void addChild(int key, BPNode child) {

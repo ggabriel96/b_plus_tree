@@ -6,6 +6,10 @@ class Main {
 		BPTree t = new BPTree(1);
 		System.out.println(t.root);
 		t.graph();
+		// System.out.println("************************************");
+		// t.add(-1);
+		// System.out.println(t.root);
+		// t.graph();
 		System.out.println("************************************");
 		t.add(11);
 		System.out.println(t.root);
