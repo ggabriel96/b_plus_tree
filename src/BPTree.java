@@ -29,40 +29,49 @@ class BPTree {
 
 	public void addFix(BPNode node) {
 		if (node.size() >= BPNode.MAX) {
-			int i, firstBackup = node.firstKey();
-			Map.Entry<Integer, BPNode> first, last;
+			int i, nodeFirstKey = node.firstKey();
+			Map.Entry<Integer, BPNode> entry;
 			TreeMap<Integer, BPNode> newChildren = new TreeMap<Integer, BPNode>();
 			BPNode left = new BPNode(), right = new BPNode();
 
 			left.children = new TreeMap<Integer, BPNode>();
-			right.children = new TreeMap<Integer, BPNode>();
 			for (i = 0; i < BPNode.MAX / 2; i++) {
-				first = node.firstEntry();
-				left.addChild(first.getKey(), first.getValue());
-				node.delChild(first.getKey());
+				entry = node.firstEntry();
+				left.addChild(entry.getKey(), entry.getValue());
 
-				last = node.lastEntry();
-				right.addChild(last.getKey(), last.getValue());
-				node.delChild(last.getKey());
+				// updating parents, not "node" anymore, but "left"
+				if (entry.getValue() != null) entry.getValue().parent = left;
+				node.delChild(entry.getKey());
 			}
-			left.parent = node;
-			right.parent = node;
 
-			System.out.println("left: " + left);
-			System.out.println("right: " + right);
+			right.children = new TreeMap<Integer, BPNode>();
+			for (; i < BPNode.MAX; i++) {
+				entry = node.firstEntry();
+				right.addChild(entry.getKey(), entry.getValue());
+
+				// updating parents, not "node" anymore, but "right"
+				if (entry.getValue() != null) entry.getValue().parent = right;
+				node.delChild(entry.getKey());
+			}
 
 			if (node.parent == null) {
 				newChildren.put(left.firstKey(), left);
 				newChildren.put(right.firstKey(), right);
+
+				left.parent = node;
+				right.parent = node;
 
 				node.children = new TreeMap<Integer, BPNode>(newChildren);
 				this.root = node;
 				node.parent = null;
 			}
 			else {
-				node.parent.delChild(firstBackup);
+				node.parent.delChild(nodeFirstKey);
 				node.parent.addChild(left.firstKey(), left);
 				node.parent.addChild(right.firstKey(), right);
+
+				left.parent = node.parent;
+				right.parent = node.parent;
 
 				this.addFix(node.parent);
 			}

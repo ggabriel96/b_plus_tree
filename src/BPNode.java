@@ -3,7 +3,7 @@ import java.util.*;
 class BPNode {
 	public int count;
 	// public static final int MAX = 340;
-	public static final int MAX = 4;
+	public static final int MAX = 6;
 	public TreeMap<Integer, BPNode> children;
 	public BPNode left, parent, right;
 
