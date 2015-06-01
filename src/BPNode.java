@@ -31,12 +31,24 @@ class BPNode {
 	}
 
 	public BPNode find(int key) {
-		if (this.children.floorEntry(key) == null || this.children.floorEntry(key).getValue() == null) {
-			return this;
+		Map.Entry<Integer, BPNode> entry = this.floorEntry(key);
+		
+		if (entry != null) {
+			if (entry.getValue() != null) return entry.getValue().find(key);
+			else return this;
 		}
 		else {
-			return this.children.floorEntry(key).getValue().find(key);
+			if (this.size() == 0) return this;
+			else {
+				entry = this.firstEntry();
+				if (entry.getValue() == null) return this;
+				else return entry.getValue().find(key);
+			}
 		}
+	}
+	
+	public boolean containsKey(int key) {
+		return this.children.containsKey(key);
 	}
 
 	public Map.Entry<Integer, BPNode> firstEntry() {
@@ -45,6 +57,10 @@ class BPNode {
 
 	public Map.Entry<Integer, BPNode> lastEntry() {
 		return (Map.Entry<Integer, BPNode>)this.children.lastEntry();
+	}
+	
+	public Map.Entry<Integer, BPNode> floorEntry(int key) {
+		return (Map.Entry<Integer, BPNode>)this.children.floorEntry(key);
 	}
 
 	public Integer firstKey() {
@@ -59,8 +75,10 @@ class BPNode {
 		if (this.children == null) {
 			this.children = new TreeMap<Integer, BPNode>();
 		}
-		this.children.put(key, child);
-		this.count++;
+		if (!this.containsKey(key)) {
+			this.children.put(key, child);
+			this.count++;
+		}
 	}
 
 	public void delChild(int key) {

@@ -11,7 +11,7 @@ class BPTree {
 	public BPTree(int key) {
 		this.root = new BPNode(key);
 	}
-
+	
 	public BPNode find(int key) {
 		return this.root.find(key);
 	}
@@ -28,6 +28,11 @@ class BPTree {
 	}
 
 	public void addFix(BPNode node) {
+		if (node.parent != null && node.parent.firstKey() > node.firstKey()) {
+			node.parent.delChild(node.parent.firstKey());
+			node.parent.addChild(node.firstKey(), node);
+		}
+
 		if (node.size() >= BPNode.MAX) {
 			int i, nodeFirstKey = node.firstKey();
 			Map.Entry<Integer, BPNode> entry;
@@ -72,10 +77,10 @@ class BPTree {
 
 				left.parent = node.parent;
 				right.parent = node.parent;
-
-				this.addFix(node.parent);
 			}
 		}
+		
+		if (node.parent != null) this.addFix(node.parent);
 	}
 
 	public void del(int key) {
