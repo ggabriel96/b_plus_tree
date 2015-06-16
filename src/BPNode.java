@@ -2,21 +2,21 @@ import java.util.*;
 
 class BPNode {
 	public int count;
-	// public static final int MAX = 340;
+	public BPNode parent;
 	public static final int MAX = 6;
+	// public static final int MAX = 340;
 	public TreeMap<Integer, BPNode> children;
-	public BPNode left, parent, right;
 
 	public BPNode() {
 		this.count = 0;
-		this.left = this.parent = this.right = null;
+		this.parent = null;
 
 		this.children = null;
 	}
 
 	public BPNode(int key) {
 		this.count = 0;
-		this.left = this.parent = this.right = null;
+		this.parent = null;
 
 		this.children = new TreeMap<Integer, BPNode>();
 		this.addChild(key, null);
@@ -32,7 +32,7 @@ class BPNode {
 
 	public BPNode find(int key) {
 		Map.Entry<Integer, BPNode> entry = this.floorEntry(key);
-		
+
 		if (entry != null) {
 			if (entry.getValue() != null) return entry.getValue().find(key);
 			else return this;
@@ -46,7 +46,7 @@ class BPNode {
 			}
 		}
 	}
-	
+
 	public boolean containsKey(int key) {
 		return this.children.containsKey(key);
 	}
@@ -58,7 +58,7 @@ class BPNode {
 	public Map.Entry<Integer, BPNode> lastEntry() {
 		return (Map.Entry<Integer, BPNode>)this.children.lastEntry();
 	}
-	
+
 	public Map.Entry<Integer, BPNode> floorEntry(int key) {
 		return (Map.Entry<Integer, BPNode>)this.children.floorEntry(key);
 	}
@@ -69,6 +69,10 @@ class BPNode {
 
 	public Integer lastKey() {
 		return this.children.lastKey();
+	}
+
+	public int index() {
+		return 0;
 	}
 
 	public void addChild(int key, BPNode child) {
