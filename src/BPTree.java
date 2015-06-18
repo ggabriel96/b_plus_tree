@@ -2,44 +2,48 @@ import java.io.*;
 import java.util.*;
 
 class BPTree {
-	public BPNode root;
+	public long root, indexCount;
+	public static final long NIL = -1;
 
 	public BPTree() {
-		this.root = null;
+		this.root = NIL;
+		this.indexCount = 0;
 	}
 
 	public BPTree(int key) {
-		this.root = new BPNode(key);
+		this.indexCount = 1;
+		this.root = new BPNode(key, 0);
 	}
-	
+
 	public BPNode find(int key) {
 		return this.root.find(key);
 	}
 
 	public void add(int key) {
 		if (this.root == null) {
-			this.root = new BPNode(key);
+			this.root = new BPNode(key, 0);
+			this.indexCount++;
 		}
 		else {
 			BPNode nodeToAdd = this.find(key);
-			nodeToAdd.addChild(key, null);
+			nodeToAdd.addChild(key, NIL);
 			this.addFix(nodeToAdd);
 		}
 	}
 
 	public void addFix(BPNode node) {
-		if (node.parent != null && node.parent.firstKey() > node.firstKey()) {
+		if (node.parent != NIL && node.parent.firstKey() > node.firstKey()) {
 			node.parent.delChild(node.parent.firstKey());
 			node.parent.addChild(node.firstKey(), node);
 		}
 
 		if (node.size() >= BPNode.MAX) {
+			Map.Entry<Long, Long> entry;
 			int i, nodeFirstKey = node.firstKey();
-			Map.Entry<Integer, BPNode> entry;
-			TreeMap<Integer, BPNode> newChildren = new TreeMap<Integer, BPNode>();
 			BPNode left = new BPNode(), right = new BPNode();
+			TreeMap<Long, Long> newChildren = new TreeMap<>();
 
-			left.children = new TreeMap<Integer, BPNode>();
+			left.children = new TreeMap<>();
 			for (i = 0; i < BPNode.MAX / 2; i++) {
 				entry = node.firstEntry();
 				left.addChild(entry.getKey(), entry.getValue());
@@ -49,7 +53,7 @@ class BPTree {
 				node.delChild(entry.getKey());
 			}
 
-			right.children = new TreeMap<Integer, BPNode>();
+			right.children = new TreeMap<>();
 			for (; i < BPNode.MAX; i++) {
 				entry = node.firstEntry();
 				right.addChild(entry.getKey(), entry.getValue());
@@ -79,7 +83,7 @@ class BPTree {
 				right.parent = node.parent;
 			}
 		}
-		
+
 		if (node.parent != null) this.addFix(node.parent);
 	}
 
